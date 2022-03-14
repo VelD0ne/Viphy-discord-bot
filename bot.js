@@ -19,17 +19,6 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`)
 });
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const { commandName } = interaction;
-
-	if (commandName === 'ping') {
-		await interaction.reply('Pong!');
-	} else if (commandName === 'beep') {
-		await interaction.reply('Boop!');
-	}
-});
 
 client.on('messageCreate', message => {
 
@@ -38,14 +27,21 @@ client.on('messageCreate', message => {
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
 
-    if(commands.has(command)){
-        commands.get(command)(message, "Hello" + (message.author.id === config.authorId ? ", my creator":"") + "!");
+    if(command === "hi"){
+        commands.get(command)(message);
+    }
+
+    if(command === "help"){
+        commands.get(command)(message);
     }
 });
 
-const writeMessage = (message, text) => message.channel.send(text);
 const commands = new Map();
-commands.set('hi', writeMessage)
+commands.set('hi', (message) => message.channel.send("Hello" + (message.author.id === config.authorId ? ", my creator":"") + "!"))
+commands.set('help', (message) => {
+    const commandsOfBot = "This Bot has following commands:\n-\n"+[...commands.keys()].reduce((commandsString, elem) => commandsString + elem + "\n" , "") +"-" ;
+    message.channel.send(commandsOfBot);
+});
 
 
 client.login(config.token);
