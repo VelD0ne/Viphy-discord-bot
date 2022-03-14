@@ -1,0 +1,10 @@
+{
+    "name": "viphy",
+    "version": "1.0.0",
+    "description": "My First Discord Bot",
+    "main": "bot.js",
+    "author": "Dan",
+    "dependencies": {
+        "discord.js": "^13.6.0"
+    }
+}
