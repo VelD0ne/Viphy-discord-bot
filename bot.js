@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const config = require('./config.json');
-
+const { commands } = require('./deploy-commands.js');
 // Configure logger settings
 
 const prefix='!';
@@ -19,29 +19,18 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`)
 });
 
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
 
-client.on('messageCreate', message => {
-
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
-
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
-
-    if(command === "hi"){
-        commands.get(command)(message);
-    }
-
-    if(command === "help"){
-        commands.get(command)(message);
-    }
+	const { commandName } = interaction;
+	if (commandName === 'hi') {
+        const greet = "Hello, "+ interaction.member.user.username + (interaction.member.id === config.authorId ? ", my creator":"") + "!";
+		await interaction.reply(greet);
+	} else if (commandName === 'user') {
+		await interaction.reply('User info.');
+	}
 });
 
-const commands = new Map();
-commands.set('hi', (message) => message.channel.send("Hello" + (message.author.id === config.authorId ? ", my creator":"") + "!"))
-commands.set('help', (message) => {
-    const commandsOfBot = "This Bot has following commands:\n-\n"+[...commands.keys()].reduce((commandsString, elem) => commandsString + elem + "\n" , "") +"-" ;
-    message.channel.send(commandsOfBot);
-});
 
 
 client.login(config.token);
