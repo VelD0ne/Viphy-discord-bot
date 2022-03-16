@@ -30,11 +30,6 @@ const petCommandExample = async (param) => {
             file: animatedGif,
             name: 'pet.gif'
         })
-
-    // Example #2: Or you could save it somewhere.
-    fs.writeFile('idi_nahui.gif', animatedGif, function (err) {
-        console.log('Cyka blyat! An error occurred!')
-    })
 }
 
 client.on('ready', () => {
@@ -51,13 +46,15 @@ client.on('interactionCreate', async interaction => {
 	} else if (commandName === 'user') {
 		await interaction.reply('User info.');
 	} else if (commandName === 'pet_me') {
-		console.log('1');
 		let animatedGif = await petPetGif(interaction.member.user.avatarURL({ format: "jpg"} ))
 		const file = new Discord.MessageAttachment(animatedGif, "avatar.gif");	
-		interaction.channel.send({files: [file] });
+		interaction.reply({files: [file] });
 	}
 });
 
-
+client.on('messageCreate' , function(message) {
+	console.log(message);
+	message.reply(message.attachments);
+});
 
 client.login(config.token);	
