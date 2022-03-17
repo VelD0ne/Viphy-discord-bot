@@ -5,6 +5,8 @@ const { clientId, guildId, token } = require('./config.json');
 
 const commands = [
 	new SlashCommandBuilder().setName('hi').setDescription('Greet with member!'),
+	new SlashCommandBuilder().setName('pet_me').setDescription('Create a gif with members avatar!'),
+
 ]
 	.map(command => command.toJSON());
 
