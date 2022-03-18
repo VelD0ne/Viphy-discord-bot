@@ -14,47 +14,52 @@ const client = new Discord.Client({
     ]
 });
 
-const petCommandExample = async (param) => {
-    let animatedGif = await petPetGif(param.member.avatar)
-
-    // Example #1: Reply with the image attached
-    bot.createMessage(param.channel.id,
-        {
-          "embed": {
-            "image": {
-              "url": 'attachment://pet.gif',
-            }
-          }
-        },
-        {
-            file: animatedGif,
-            name: 'pet.gif'
-        })
-}
-
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`)
 });
+
+async function createPetPetAnimation(url) {
+  const animatedGif = await petPetGif(url);
+  return new Discord.MessageAttachment(animatedGif, "petpet.gif");	
+}
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
 	const { commandName } = interaction;
 	if (commandName === 'hi') {
-        const greet = "Hello, "+ interaction.member.user.username + (interaction.member.id === config.authorId ? ", my creator":"") + "!";
+    const greet = "Hello, "+ interaction.member.user.username + (interaction.member.id === config.authorId ? ", my creator":"") + "!";
 		await interaction.reply(greet);
 	} else if (commandName === 'user') {
 		await interaction.reply('User info.');
 	} else if (commandName === 'pet_me') {
-		let animatedGif = await petPetGif(interaction.member.user.avatarURL({ format: "jpg"} ))
-		const file = new Discord.MessageAttachment(animatedGif, "avatar.gif");	
+    const file = await createPetPetAnimation(interaction.member.user.avatarURL({ format: "png"} ));
 		interaction.reply({files: [file] });
+
 	}
 });
 
-client.on('messageCreate' , function(message) {
-	console.log(message);
-	message.reply(message.attachments);
+client.on('messageCreate' , message => {
+  if(message.author.id === config.clientId || !message.content.startsWith(config.prefix)) return;
+
+  const commands = message.content.substring(1).split(" ");
+
+  if (message.attachments.size > 0 && commands[0]==="petpet") {
+    if (message.attachments.every(attachIsImage)){
+        message.attachments.map(async val => {
+        const file = await createPetPetAnimation(val.attachment);
+        await message.reply({files: [file]});
+      });
+    }
+}
 });
+
+function attachIsImage(msgAttach) {
+  const url = msgAttach.url;
+  //True if this url is a png image.
+  const isImage = (url.indexOf("png", url.length - "png".length /*or 3*/) !== -1) || 
+  (url.indexOf("jpg", url.length - "jpg".length /*or 3*/) !== -1);
+  return isImage;
+}
 
 client.login(config.token);	
