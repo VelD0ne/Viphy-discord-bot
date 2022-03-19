@@ -10,6 +10,7 @@
         "canvas": "^2.9.0",
         "discord-api-types": "^0.29.0",
         "discord.js": "^13.6.0",
+        "node-fetch": "2.0",
         "pet-pet-gif": "^1.0.9"
     }
 }
