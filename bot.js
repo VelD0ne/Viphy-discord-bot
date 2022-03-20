@@ -44,7 +44,7 @@ client.on('interactionCreate', async interaction => {
 	} else if (commandName === 'viphy') {
     await interaction.reply('Wait');
     const query = interaction.options._hoistedOptions[0].value;
-    const url = `https://api.giphy.com/v1/gifs/search?api_key=c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe&q=${query}`;
+    const url = `https://api.giphy.com/v1/gifs/search?limit=10&api_key=c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe&q=${query}`;
     const response = await fetch(url);
     const {data} = await response.json();
     const file = new Discord.MessageAttachment(data[0].images.original.url, (data[0].title? data[0].title : "unknown_gif") + ".gif");
