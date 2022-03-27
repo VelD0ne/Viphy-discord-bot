@@ -73,7 +73,11 @@ client.on('interactionCreate', async interaction => {
         .setPlaceholder('Select your gif name here!')
         .addOptions(data.reduce(selectMenuOptionsReducer, [])),
     );
-		await interaction.reply({ content: 'List of gifs!', components: [row] });
+    if(row.components[0].options.length>0) {
+		  await interaction.reply({ content: 'List of gifs!', components: [row] });
+    } else {
+      await interaction.reply({ content: 'Gifs now found' });
+    }
     // interaction.editReply({files: [file] });
     // console.log(query)
   }
@@ -86,7 +90,7 @@ client.on('interactionCreate', async interaction => {
 
 	if (interaction.customId.startsWith("gifs")) {
     // await interaction.reply("Processing...");
-    await interaction.update({});
+    await interaction.update({content: "Wait for your gif",components: []});
     const file = new Discord.MessageAttachment(gifContainer.get(interaction.customId.substring(4))[+interaction.values[0]], "gif.gif");
 		await interaction.editReply({ content: 'Enjoy your gif!', files: [file], components: [] });
     // console.log(interaction)
