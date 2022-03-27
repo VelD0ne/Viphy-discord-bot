@@ -8,6 +8,7 @@ const commands = [
 	new SlashCommandBuilder().setName('pet_me').setDescription('Create a gif with members avatar!'),
 	new SlashCommandBuilder().setName('viphy').setDescription('Recreates giphy function!')
 	.addStringOption(option => option.setName('query').setDescription('String to find gifs').setRequired(true)),
+	new SlashCommandBuilder().setName('ping').setDescription('Testing select menus')
 
 
 ]

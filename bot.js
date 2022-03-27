@@ -28,6 +28,8 @@ async function createPetPetAnimation(url) {
   return new Discord.MessageAttachment(animatedGif, "petpet.gif");	
 }
 
+const gifContainer = new Map();
+
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -42,15 +44,54 @@ client.on('interactionCreate', async interaction => {
     const file = await createPetPetAnimation(interaction.member.user.avatarURL({ format: "png"} ));
 		interaction.reply({files: [file] });
 	} else if (commandName === 'viphy') {
-    await interaction.reply('Wait');
+    // await interaction.reply('Wait');
+
+    const selectMenuOptionsReducer = (accum, elem, index) => {
+      // console.log(elem.images.original.url)
+      // const file = new Discord.MessageAttachment(elem.images.original.url, "gif.gif");
+      // interaction.channel.send({files:[file]})
+      accum.push({
+        label: (elem.title? elem.title : "unknown_gif"),
+        value: `${index}`,
+      });
+      return accum;
+    } 
+    // elem.images.original.url
     const query = interaction.options._hoistedOptions[0].value;
     const url = `https://api.giphy.com/v1/gifs/search?limit=10&api_key=c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe&q=${query}`;
     const response = await fetch(url);
     const {data} = await response.json();
-    const file = new Discord.MessageAttachment(data[0].images.original.url, (data[0].title? data[0].title : "unknown_gif") + ".gif");
-    interaction.editReply({files: [file] });
-    console.log(query)
+    gifArray = data.map(elem => elem.images.original.url)
+    gifContainer.set(interaction.id, gifArray);
+    // console.log(gifArray)
+    // console.log(data)
+    // console.log(interaction.id)
+    const row = new Discord.MessageActionRow()
+    .addComponents(
+      new Discord.MessageSelectMenu()
+        .setCustomId(`gifs${interaction.id}`)
+        .setPlaceholder('Select your gif name here!')
+        .addOptions(data.reduce(selectMenuOptionsReducer, [])),
+    );
+		await interaction.reply({ content: 'List of gifs!', components: [row] });
+    // interaction.editReply({files: [file] });
+    // console.log(query)
   }
+
+});
+
+client.on('interactionCreate', async interaction => {
+
+	if (!interaction.isSelectMenu()) return;
+
+	if (interaction.customId.startsWith("gifs")) {
+    // await interaction.reply("Processing...");
+    await interaction.update({});
+    const file = new Discord.MessageAttachment(gifContainer.get(interaction.customId.substring(4))[+interaction.values[0]], "gif.gif");
+		await interaction.editReply({ content: 'Enjoy your gif!', files: [file], components: [] });
+    // console.log(interaction)
+	}
+
 });
 
 client.on('messageCreate' , message => {
