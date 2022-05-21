@@ -4,5 +4,7 @@
     "clientId": "952559398260191273",
     "guildId": "952541144129093642",
     "prefix": "!",
-    "giphyKey": "c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe"
+    "giphyKey": "c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe",
+    "selectMenuId": "gifs",
+    "api_key":"c7wt1bUOrn2bVUYP1DpTvbVHFvUuUqAe"
 }

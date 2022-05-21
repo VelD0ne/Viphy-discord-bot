@@ -2,7 +2,7 @@
     "name": "viphy",
     "version": "1.0.0",
     "description": "My First Discord Bot",
-    "main": "bot.js",
+    "main": "client.js",
     "author": "Dan",
     "dependencies": {
         "@discordjs/builders": "^0.12.0",
