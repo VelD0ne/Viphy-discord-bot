@@ -4,8 +4,8 @@ const { viphyCommand } = require("./viphyCommand");
 const { viphySelectCommand } = require("./viphySelectCommand");
 
 module.exports.commands = {
-  greetCommand,
-  petMe,
-  viphyCommand,
-  viphySelectCommand,
+    greetCommand,
+    petMe,
+    viphyCommand,
+    viphySelectCommand,
 };
